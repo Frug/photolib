@@ -3,6 +3,8 @@
 set -e
 
 cd go && go build && ./photolib &
-cd ..
-cd react && yarn install
-cd -
+cd react && yarn install && npm start
+
+sleep 1
+trap "trap - SIGTERM && kill -- -$$" SIGINT SIGTERM EXIT
+
