@@ -12,3 +12,14 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+
+.photoBox {
+  border: 1px solid black;
+  margin: 5px;
+}
+
+.menu {
+  background: #c9d3e4;
+  padding: 5px;
+  text-align: right;
+}
