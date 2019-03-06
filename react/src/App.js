@@ -41,8 +41,6 @@ class App extends Component {
   }
 
   render() {
-    console.log("render")
-
     return (
       <Router>
         <div className="photo-app container">
