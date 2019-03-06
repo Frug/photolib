@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { NavLink } from 'react-router-dom'
+import { Link, NavLink } from 'react-router-dom'
 
 class Auth extends Component {
 
@@ -9,7 +9,7 @@ class Auth extends Component {
     const titleBar = authToken == null ? (
       <a href="http://localhost:8081/login">Login with Github</a>
     ) : (
-      <a href="http://localhost:8080/logout" onClick={handleLogout}>Logout</a>
+      <Link to="/logout" onClick={handleLogout}>Logout</Link>
     )
 
     return(

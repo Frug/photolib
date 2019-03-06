@@ -4,8 +4,8 @@ import React, { Component } from 'react';
 class AddPhoto extends Component {
 
   state = {
-    url: null,
-    title: null
+    url: '',
+    title: ''
   }
   handleChange = (e) => {
     this.setState({
@@ -15,6 +15,9 @@ class AddPhoto extends Component {
   handleSubmit = (e) => {
     e.preventDefault();
     this.props.addPhoto(this.state);
+    this.setState({
+      url: '', title: '' 
+    })
   }
 
   render() {
@@ -22,9 +25,9 @@ class AddPhoto extends Component {
       <div>
         <form onSubmit={this.handleSubmit}>
           <label htmlFor="url">Url:</label>
-          <input type="text" id="url" onChange={this.handleChange} />
+          <input type="text" id="url" onChange={this.handleChange} value={this.state.url} />
           <label htmlFor="title">Title:</label>
-          <input type="text" id="title" onChange={this.handleChange} />
+          <input type="text" id="title" onChange={this.handleChange} value={this.state.title} />
           <button>Submit</button>
         </form>
       </div>

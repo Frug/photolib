@@ -11,6 +11,18 @@ type Photo struct {
 type Photos struct {
 	Photos []Photo `json:"photos"`
 	Page   int     `json:"page"`
+	Total  int     `json:"total"`
+}
+
+func DeletePhoto(id int) (err error) {
+	stmt, err := getDB().Prepare("DELETE FROM photos WHERE ROWID = ?")
+	if err != nil {
+		return err
+	}
+
+	_, err = stmt.Exec(id)
+
+	return err
 }
 
 func DeletePhotos() (err error) {
@@ -68,6 +80,11 @@ func GetPhotos(page int) (photos Photos, err error) {
 		photos.Photos = append(photos.Photos, photo)
 	}
 	checkErr(err)
+
+	row := getDB().QueryRow("SELECT COUNT(*) FROM photos")
+	if err := row.Scan(&photos.Total); err != nil {
+		return photos, err
+	}
 
 	return photos, nil
 }

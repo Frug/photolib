@@ -13,40 +13,42 @@ class App extends Component {
       { 'url':'https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_92x30dp.png', title:"g3", id:3},
     ]
   }
+
   addPhoto = (photo) => {
     photo.id = Math.random();
     console.log("adding via API", photo)
     let photos = [...this.state.photos, photo]
     this.setState({
-        photos: photos 
+        photos: photos, 
+        authToken: this.state.authToken
     })
   }
-  deletePhoto = (id) => {
-    let photos = this.state.photos.filter(photo => {
-      return photo.id !== id;
-    })
 
-    this.setState({
-      photos: photos
-    })
-  }
+
   handleLogout = () => {
     let authToken = null;
     this.setState({authToken});
   }
 
-  render() {
-
+  // This effectively only mounts after a login comes from github
+  componentDidMount() {
     let search = window.location.search;
     let params = new URLSearchParams(search);
     let authCode = params.get('code');
+    if (authCode !== "") {
+      this.setState({authCode: authCode});
+    }
+  }
+
+  render() {
+    console.log("render")
 
     return (
       <Router>
         <div className="photo-app container">
-          <Auth authToken={authCode} handleLogout={this.handleLogout} />
+          <Auth authToken={this.state.authCode} handleLogout={this.handleLogout} />
           <Route path="/add" render={()=><AddPhoto addPhoto={this.addPhoto} />}/>
-          <Route path="/photos" render={()=><Photos photos={this.state.photos} deletePhoto={this.deletePhoto}/>}/>
+          <Route path="/photos" render={()=><Photos photos={this.state.photos} authToken={this.state.authToken} deletePhoto={this.deletePhoto}/>}/>
         </div>
       </Router>
     );
