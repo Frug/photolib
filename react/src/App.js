@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Photos from './Photos.js'
 import Auth from './Auth.js'
 import AddPhoto from './AddPhoto.js'
-import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
+import { BrowserRouter as Router, Route } from 'react-router-dom'
 
 class App extends Component {
   state = {
@@ -36,14 +36,19 @@ class App extends Component {
   }
 
   render() {
+
+    let search = window.location.search;
+    let params = new URLSearchParams(search);
+    let authCode = params.get('code');
+
     return (
-      <BrowserRouter>
+      <Router>
         <div className="photo-app container">
-          <Auth authToken={null} handleLogout={this.handleLogout} />
-          <AddPhoto addPhoto={this.addPhoto} />
-          <Route path="/photos" Component="{Photos}"  photos={this.state.photos} deletePhoto={this.deletePhoto} />
+          <Auth authToken={authCode} handleLogout={this.handleLogout} />
+          <Route path="/add" render={()=><AddPhoto addPhoto={this.addPhoto} />}/>
+          <Route path="/photos" render={()=><Photos photos={this.state.photos} deletePhoto={this.deletePhoto}/>}/>
         </div>
-      </BrowserRouter>
+      </Router>
     );
   }
 }

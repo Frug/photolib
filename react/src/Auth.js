@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { NavLink } from 'react-router-dom'
 
 class Auth extends Component {
 
@@ -16,6 +17,8 @@ class Auth extends Component {
         <div className="container">
           <ul className="right">
             <li>{ titleBar }</li>
+            <li><NavLink to="/photos">Photos</NavLink></li>
+            <li><NavLink to="/add">Add Photo</NavLink></li>
           </ul>
         </div>
       </nav>
