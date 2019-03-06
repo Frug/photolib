@@ -1,0 +1,10 @@
+version: '3'
+services:
+    react:
+        image: bayesimpact/react-base:latest
+        container_name: react
+        volumes:
+            - ./react:/usr/app
+        ports:
+            - 3000:3000
+
