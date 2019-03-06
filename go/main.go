@@ -23,6 +23,7 @@ func main() {
 	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
 		Format: "method=${method}, uri=${uri}, status=${status}\n",
 	}))
+	e.Use(auth.CheckAuth)
 
 	e.GET("/", func(c echo.Context) error {
 		return c.String(http.StatusOK, "Golang app is up")

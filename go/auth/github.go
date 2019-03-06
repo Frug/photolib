@@ -3,9 +3,12 @@ package auth
 import (
 	"context"
 	"math/rand"
+	"net/http"
+	"strings"
 	"text/template"
 
 	"github.com/google/go-github/v24/github"
+	"github.com/labstack/echo"
 	"golang.org/x/oauth2"
 )
 
@@ -79,4 +82,20 @@ func randomString(len int) string {
 		bytes[i] = byte(65 + rand.Intn(25)) //A=65 and Z = 65+25
 	}
 	return string(bytes)
+}
+
+// CheckAuth is middleware for echo's router
+func CheckAuth(next echo.HandlerFunc) echo.HandlerFunc {
+	return func(c echo.Context) error {
+		if err := next(c); err != nil {
+			c.Error(err)
+		}
+		authToken := strings.Replace(c.Request().Header.Get("Authorization"), "Bearer ", "", -1)
+		if authToken == "" {
+			// TODO: This should call github's api to validate authToken
+			return c.String(http.StatusUnauthorized, "Unauthorized")
+		}
+
+		return next(c)
+	}
 }
