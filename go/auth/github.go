@@ -3,7 +3,6 @@ package auth
 import (
 	"context"
 	"math/rand"
-	"net/http"
 	"strings"
 	"text/template"
 
@@ -84,16 +83,22 @@ func randomString(len int) string {
 	return string(bytes)
 }
 
+func CheckAuthHeader(c echo.Context) bool {
+	// TODO: This should be calling github's api
+	authToken := strings.Replace(c.Request().Header.Get("Authorization"), "Bearer ", "", -1)
+	return authToken != ""
+}
+
 // CheckAuth is middleware for echo's router
 func CheckAuth(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		if err := next(c); err != nil {
 			c.Error(err)
 		}
-		authToken := strings.Replace(c.Request().Header.Get("Authorization"), "Bearer ", "", -1)
-		if authToken == "" {
+
+		if !CheckAuthHeader(c) {
 			// TODO: This should call github's api to validate authToken
-			return c.String(http.StatusUnauthorized, "Unauthorized")
+			c.Error(echo.ErrUnauthorized)
 		}
 
 		return next(c)

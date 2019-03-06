@@ -13,7 +13,6 @@ import (
 )
 
 func main() {
-	fmt.Println("Whata")
 	e := echo.New()
 
 	//auth.SetCredentials(os.Getenv("CLIENT_ID"), os.Getenv("CLIENT_SECRET"))
@@ -23,7 +22,6 @@ func main() {
 	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
 		Format: "method=${method}, uri=${uri}, status=${status}\n",
 	}))
-	e.Use(auth.CheckAuth)
 
 	e.GET("/", func(c echo.Context) error {
 		return c.String(http.StatusOK, "Golang app is up")
@@ -42,6 +40,9 @@ func main() {
 	})
 
 	e.GET("/photos", func(c echo.Context) error {
+		if !auth.CheckAuthHeader(c) {
+			return c.String(http.StatusUnauthorized, "Not authorized")
+		}
 		page, _ := strconv.Atoi(c.QueryParam("page"))
 		p, err := photos.GetPhotos(page)
 		if err != nil {
