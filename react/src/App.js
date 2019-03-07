@@ -3,15 +3,12 @@ import Photos from './Photos.js'
 import Auth from './Auth.js'
 import AddPhoto from './AddPhoto.js'
 import { BrowserRouter as Router, Route } from 'react-router-dom'
+import { connect } from 'react-redux'
 
 class App extends Component {
   state = {
     authToken: null,
-    photos: [
-      { 'url':'https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_92x30dp.png', title:"g", id:1},
-      { 'url':'https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_92x30dp.png', title:"g2", id:2},
-      { 'url':'https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_92x30dp.png', title:"g3", id:3},
-    ]
+    photos: []
   }
 
   addPhoto = (photo) => {
@@ -24,23 +21,18 @@ class App extends Component {
     })
   }
 
-
   handleLogout = () => {
     let authToken = null;
     this.setState({authToken});
   }
 
-  // This effectively only mounts after a login comes from github
   componentDidMount() {
-    let search = window.location.search;
-    let params = new URLSearchParams(search);
-    let authCode = params.get('code');
-    if (authCode !== "") {
-      this.setState({authCode: authCode});
-    }
+    //getAuth();
   }
 
   render() {
+    console.log(this.props)
+
     return (
       <Router>
         <div className="photo-app container">
@@ -53,4 +45,16 @@ class App extends Component {
   }
 }
 
-export default App;
+const mapStateToProps = (state, ownProps) => {
+  return {
+    authToken: state.authToken 
+  }
+}
+ 
+const mapDispatchToProps = (dispatch) => {
+  return {
+    setAuthToken: (authToken) => { dispatch({type: 'LOGIN', authToken: authToken })}
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);

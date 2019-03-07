@@ -1,32 +1,38 @@
 import React, { Component } from 'react';
 import { Link, NavLink } from 'react-router-dom'
+import { connect } from 'react-redux'
 
 class Auth extends Component {
-  state = {
-    loggedIn: false 
-  }
 
   render() {
     const { authToken, handleLogout } = this.props;
 
-    let loginButton = authToken == null ? (
-      <a href="http://localhost:8081/login">Login with Github</a>
+    let menu = authToken == null ? (
+      <ul className="right">
+        <li><a href="http://localhost:8081/login">Login with Github</a></li>
+      </ul>
     ) : (
-      <a href="/logout">Logout</a>
+      <ul className="right">
+        <li><a href="/logout">Logout</a></li>
+        <li><NavLink to="/photos">Photos</NavLink></li>
+        <li><NavLink to="/add">Add Photo</NavLink></li>
+      </ul>
     )
 
     return(
       <nav className="nav-wrapper grey lighten-1">
         <div className="container">
-          <ul className="right">
-            <li>{ loginButton }</li>
-            <li><NavLink to="/photos">Photos</NavLink></li>
-            <li><NavLink to="/add">Add Photo</NavLink></li>
-          </ul>
+            {menu}
         </div>
       </nav>
     )
   }
 }
 
-export default Auth 
+const mapStateToProps = (state, ownProps) => {
+  return {
+    authToken: state.authToken 
+  }
+}
+
+export default connect(mapStateToProps)(Auth)
